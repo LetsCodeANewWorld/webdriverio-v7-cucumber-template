@@ -1,0 +1,11 @@
+{
+    "compilerOptions": {
+        "types": [
+            "node",
+            "**/*.js",
+            "**/*.json",
+            "/node_modules/@wdio/sync",
+            "/node_modules/@wdio/cucumber-framework"
+        ]
+    }
+}
