@@ -1,56 +1,41 @@
+#!/usr/bin/env node
 export{}
-require('@babel/register')({
-	presets: [
-		[
-			'@babel/preset-env',
-			{
-				targets: {
-					node: 'current'
-				}
-			}
-		]
-	]
-});
+// require('@babel/register')({
+// 	presets: [
+// 		[
+// 			'@babel/preset-env',
+// 			{
+// 				targets: {
+// 					node: 'current'
+// 				}
+// 			}
+// 		]
+// 	]
+// });
 
-const argv = require('yargs').argv;
-const fs = require('fs');
-const path = require('path');
-const allureReporter = require('@wdio/allure-reporter').default
-// const component =  require('../features/step-definitions/visual/visual.steps');
-// const componentName = new component();
-
-process.env.browser = (argv.browser) ? argv.browser : process.env.browser;
-const webbrowser = process.env.browser === 'undefined' ? 'chrome' : `${argv.browser}`;
-
-process.env.runvisualtest = (argv.runvisualtest) ? argv.runvisualtest : process.env.runvisualtest;
-const runvisualtest = process.env.runvisualtest === 'undefined' ? false : `${argv.runvisualtest}`;
-
-process.env.runtests = (argv.runtests) ? argv.runtests : process.env.runtests;
-const runtests = process.env.runtests === 'undefined' ? 'ui' : `${argv.runtests}`;
+// const {argv} = require('yargs');
+// @ts-ignore
+import { setSessionValues } from "../features/support/PrepareSession"
+import fs from 'fs';
+import path from 'path';
+import {default as allureReporter} from '@wdio/allure-reporter'
 
 
-process.env.testfolder = (argv.testfolder) ? argv.testfolder : process.env.testfolder;
-const testfolderpath = process.env.testfolder === 'undefined' ? `tests/features/featurefiles/${runtests}/**` : `tests/features/featurefiles/${runtests}/${argv.testfolder}`;
+setSessionValues.getRunTimeParametersAndSetDefaultValues();
 
-process.env.ff = (argv.ff) ? argv.ff : process.env.ff;
-const featureFilePath = process.env.ff === 'undefined' ? `${testfolderpath}/*.feature` : `${testfolderpath}/${argv.ff}.feature`;
 
-process.env.executionTags = (argv.executionTags) ? argv.executionTags : process.env.executionTags;
-const executionTags = process.env.executionTags === 'undefined' ? '' : `${argv.executionTags}`;
-
-process.env.baseURL = (argv.baseURL) ? argv.baseURL : process.env.baseURL;
-const baseURL = process.env.baseURL === 'undefined' ? 'http://www.google.co.uk' : `http://www.google.co.uk`;
+console.log(`feature file path is ${setSessionValues.featureFilePath}`)
 
 /** Retrieve file paths from a given folder and its subfolders. */
 const getStepDefsPaths = (folderPath: string) => {
 	const entryPaths = fs.readdirSync(folderPath).map((entry: any) => path.join(folderPath, entry));
 	const filePaths = entryPaths.filter((entryPath: any) => fs.statSync(entryPath).isFile());
 	const dirPaths = entryPaths.filter((entryPath: any) => !filePaths.includes(entryPath));
-	const dirFiles = dirPaths.reduce((prev: any[], curr: string) => prev.concat(getStepDefsPaths(curr)), []);
+	const dirFiles:any = dirPaths.reduce((prev: any[], curr: string) => prev.concat(getStepDefsPaths(curr)), []);
 	return [...filePaths, ...dirFiles];
 };
 
-const executeTags = executionTags === '' ? 'not @manual and not @wip and not @inprogress' : `${executionTags} \
+const executeTags = setSessionValues.executionTags === '' ? 'not @manual and not @wip and not @inprogress' : `${setSessionValues.executionTags} \
 and not @manual and not @wip and not @inprogress`;
 
 // @ts-ignore
@@ -63,7 +48,7 @@ const config = {
     // ====================
     //
 
-    browsername: webbrowser,
+    browsername: setSessionValues.webbrowser,
 
     // WebdriverIO allows it to run your tests in arbitrary locations (e.g. locally or
     // on a remote machine).
@@ -85,7 +70,7 @@ const config = {
     // will be called from there.
     //
     specs: [
-        featureFilePath,
+        setSessionValues.featureFilePath,
     ],
     // Patterns to exclude.
     exclude: [
@@ -144,7 +129,7 @@ const config = {
     // with `/`, the base url gets prepended, not including the path portion of your baseUrl.
     // If your `url` parameter starts without a scheme or `/` (like `some/path`), the base url
     // gets prepended directly.
-    baseUrl: baseURL,
+    baseUrl: setSessionValues.baseURL,
     //
     // Default timeout for all waitFor* commands.
     waitforTimeout: 10000,
@@ -239,9 +224,9 @@ const config = {
      * @param {Object} config wdio configuration object
      * @param {Array.<Object>} capabilities list of capabilities details
      */
-    // onPrepare: function (config, capabilities) {
-    //
-    // },
+    onPrepare: function (config: Object, capabilities:Array<Object>) {
+        setSessionValues.getRunTimeParametersAndSetDefaultValues();
+    },
     /**
      * Gets executed before a worker process is spawned and can be used to initialise specific service
      * for that worker as well as modify runtime environments in an async fashion.
@@ -324,7 +309,7 @@ const config = {
      * @param {number}                 result.duration duration of scenario in milliseconds
      */
     afterScenario: async function(world: any, result: any) {
-        allureReporter.addArgument('timestamp', Date.now());
+        allureReporter.addArgument('timestamp', String(Date.now()));
         // if(result.passed){
         //     const tags = world.pickle.tags.map((tag: { name: any; }) => tag.name);
         //     if (process.env.runvisualtest === 'true' && tags.includes('@visual')) {
@@ -437,6 +422,7 @@ const config = {
      */
     onComplete: async function() {
         const reportError = new Error('Could not generate Allure report')
+        // @ts-ignore
         const generation = allureReporter(['generate', 'allure-results', '--clean'])
 
         await generation.on('exit', (exitCode: any) => {
@@ -454,7 +440,7 @@ const config = {
     //}
 
     beforeSession() {
-        require('expect-webdriverio').setOptions({ wait: 5000 });
+        // require('expect-webdriverio').setOptions({ wait: 5000 });
     },
     // before() {
     //     browser.setWindowSize(1280, 720);

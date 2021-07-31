@@ -1,6 +1,6 @@
 export{}
 const { argv } = require('yargs');
-const preparesession = require('../features/support/prepare-session');
+const preparesession = require('../features/support/PrepareSession');
 const baseconfig = require('./wdio.base.config');
 require('dotenv').config({ path: './.env' });
 

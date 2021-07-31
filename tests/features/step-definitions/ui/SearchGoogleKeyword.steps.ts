@@ -1,5 +1,5 @@
 import {Given, When, Then} from '@cucumber/cucumber';
-import { searchKeyword } from '../pageobjects';
+import { searchKeyword } from '../../pageobjects';
 
 
 Given('that user start a new google search journey', async () => {

@@ -1,12 +1,9 @@
-const preparesession = require('../features/support/prepare-session');
+import { setSessionValues } from '../features/support';
 const baseconfig = require('./wdio.base.config');
 
 const config = Object.assign(baseconfig.config, {
 	runner: 'local',
-	// hostname: 'localhost',
-	// port: 4444,
-	// path: '/wd/hub',
-	services: preparesession.addVRTServiceInConfig('local'),
+	services: setSessionValues.addVRTServiceInConfig('local'),
 	reporters: ['spec', [
 		'cucumberjs-json', {
 			jsonFolder: 'tests/reports/cucumberjs-json-report/json/',

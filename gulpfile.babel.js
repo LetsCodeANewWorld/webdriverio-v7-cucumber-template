@@ -1,13 +1,28 @@
+#!/usr/bin/env node
 import gulp from 'gulp';
 import del from 'del';
 import path from 'path';
-import { argv } from 'yargs';
-import { default as Launcher } from '@wdio/cli';
+import { fileURLToPath } from 'url';
+// const __filename = fileURLToPath(import.meta.url);
 
-const allure = require('allure-commandline');
+// import { argv } from 'yargs';
+// import { Launcher } from '@wdio/cli';
+import allure from 'allure-commandline';
+import run from 'gulp-run';
 
-process.env.config = (argv.config) ? argv.config : process.env.config;
-const configfile = process.env.config === 'undefined' ? 'local' : `${argv.config}`;
+import Yargs from 'yargs';
+const {argv} = Yargs.options({
+	browser: { type: 'string',choices: ['firefox', 'chrome', 'edge'], default: 'chrome' , demandOption: true, alias: 'b' },
+	runvisualtest: { type: 'boolean', choices: [true, false], default:false , demandOption: true, alias: 'rvt' },
+	runtests: {type: 'string', choices: ['ui', 'visual'], default: 'ui', demandOption: true, alias: "rt",}
+});
+
+const configFile = `${argv.config}`?? 'local';
+
+    console.log(`run visual tests => ${argv.runvisualtest}`)
+	console.log(`run tests => ${argv.runtests}`)
+	console.log(`browser =>  ${configFile}`)
+
 
 // Delete temp files and last run results/screenshots
 gulp.task('prepare', async () => {
@@ -17,8 +32,14 @@ gulp.task('prepare', async () => {
 
 // Run wdio task to trigger execution
 gulp.task('wdio', gulp.series('prepare', async () => {
-	const wdio = new Launcher(path.join(__dirname, 'tests', 'config', `wdio.${configfile}.config.js`));
-	await wdio.run();
+
+	// const __dirname = path.dirname(fileURLToPath(import.meta.url));
+	// const wdio = new Launcher(path.join(path.dirname(fileURLToPath(import.meta.url)), 'tests', 'config', `wdio.${configfile}.config.js`));
+	 return run(`node_modules/.bin/wdio ./tests/config/wdio.${configFile}.config.ts`).exec()    // prints "Hello World\n".
+		.pipe(gulp.dest('output'));      // writes "Hello World\n" to output/echo.
+
+	// const wdio = new Launcher('./tests/config/wdio.local.Config.ts');
+	// await wdio.run();
 }));
 
 gulp.task('generate-allure-report', gulp.series('wdio', async (cb) => {

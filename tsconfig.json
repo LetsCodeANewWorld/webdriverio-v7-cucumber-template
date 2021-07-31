@@ -1,7 +1,8 @@
 {
     "compilerOptions": {
         "module": "commonjs",
-        "target": "es2019",
+        "target": "es5",
+        "allowJs": true,
         "moduleResolution": "node",
         "sourceMap": false,
         "declaration": false,
@@ -12,11 +13,14 @@
         "resolveJsonModule": true,
         "baseUrl": ".",
         "noImplicitAny": true,
+        "strict": true,
         "strictPropertyInitialization": true,
         "strictNullChecks": true,
         "outDir": "typeScript",
-        "typeRoots": [ "./node_modules/@types" ],
-        "types": ["node", "webdriverio/sync", "@wdio/sync", "@wdio/cucumber-framework", "chai"]
+        "typeRoots": [ "./node_modules/@types" ],    
+        "types": ["node", "webdriverio/sync", "@wdio/sync", "@wdio/cucumber-framework", "chai", "expect-webdriverio"],
+        "skipLibCheck": true,                     /* Skip type checking of declaration files. */
+        "forceConsistentCasingInFileNames": true  /* Disallow inconsistently-cased references to the same file. */
     },
     "exclude": [
         "node_modules",

@@ -1,5 +1,4 @@
 import { BasePage } from '../base.page';
-// const expect = require('expect-webdriverio');
 
 class VisualBasePage extends BasePage{
 
@@ -22,11 +21,13 @@ class VisualBasePage extends BasePage{
 
 	CheckElement(componentName: string) {
 		// expect(browser.$('').toBeDisplayed());
+		// @ts-ignore
 		expect(browser.checkElement(browser.$(`page.${componentName}`), componentName, {})).toEqual(0);
 	}
 
 	CheckScreen(screenName: string) {
 		const screen = screenName;
+		// @ts-ignore
 		expect(browser.checkScreen(screen, { disableCSSAnimation: true })).toEqual(0);
 	}
 }

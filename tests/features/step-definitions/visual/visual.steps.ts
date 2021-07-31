@@ -1,12 +1,12 @@
 import { Given, When, Then } from '@cucumber/cucumber';
 import { default as VisualBasePage } from '../../pageobjects/visual/vrt.base.page';
 
-const vrtTestData = require('../../../testdata/data');
+const vrtTestData = require('../../../testdata/data')
 
 const vrtBasePage = new VisualBasePage();
 let componentName = '';
 
-Given(/^User is on the B4C (.*) page$/, (pageName: string) => {
+Given(/^User is on the Google (.*) page$/, (pageName: string) => {
 	vrtBasePage.openPage(vrtTestData[pageName]);
 });
 

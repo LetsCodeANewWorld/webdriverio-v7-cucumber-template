@@ -3,19 +3,24 @@
 
 Open the folder in VS code and in terminal
 
-To run just UI tests type : gulp execute --config=local
-To run all tests type :  gulp execute --config=local --runtests=** --runvisualtest=true
-To run only visual tests type :  gulp execute --config=local --runtests=visual --runvisualtest=true
-To run only accessibility tests type : gulp execute --config=local --runtests=accessibility
+To run just UI tests type : npm run execute:local
 
-[comment]: <> (To run only Jobseeker UI tests type gulp execute --config=local --testfolder=temp --runtests=ui)
+To run all tests type :  npm run execute:local -- --runtests='**'  {will run both ui and visual tests}
 
-[comment]: <> (To run only Recruiter UI tests type gulp execute --config=local --testfolder=temp --runtests=ui)
+To run only visual tests type :  npm run execute:local -- --runvisualtest=true --runtests='visual' --webbrowser=firefox
+
+To run only accessibility tests type : npm run execute --config=local --runtests=accessibility  {In progress}
+
+
+[comment]: <> (To run a specific browser, pass --webbrowser='firefox')
 
 ===========Run scripts on browserstack/vsts pipeline===========
 
 Open the folder in VS code and in terminal
-To run just UI tests type : gulp execute
-To run all tests type : gulp execute --runtests=** --runvisualtest=true
-To run only visual tests type : gulp execute --runtests=visual --runvisualtest=true
-To run only accessibility tests type : gulp execute --runtests=accessibility  
+To run just UI tests type : npm run execute:browserstack
+
+To run all tests type : npm run execute:browserstack --runtests=** --runvisualtest=true
+
+To run only visual tests type : npm run executebrowserstack --runtests=visual --runvisualtest=true
+
+  
