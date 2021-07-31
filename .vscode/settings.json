@@ -1,0 +1,25 @@
+{
+    "cucumberautocomplete.steps": [
+        "tests/features/step-definitions/**.steps.ts"
+    ],
+    "cucumberautocomplete.syncfeatures": "tests/features/featurefiles/**/*.feature",
+    "cucumberautocomplete.strictGherkinCompletion": true,
+    "cucumberautocomplete.smartSnippets": true,
+    "cucumberautocomplete.stepsInvariants": true,
+    "cucumberautocomplete.customParameters": [
+        {
+            "parameter":"{ab}",
+            "value":"(a|b)"
+        }
+    ],
+    // "cucumberautocomplete.pages": {
+    //     "users": "tests/features/pages/**/*.page.js"
+    // },
+    "cucumberautocomplete.skipDocStringsFormat": true,
+    "cucumberautocomplete.onTypeFormat": true,
+    "editor.quickSuggestions": {
+        "comments": false,
+        "strings": true,
+        "other": true
+    }
+}
